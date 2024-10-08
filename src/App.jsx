@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./App.css";
 import ContactList from "./components/ContactList/ContactList";
 
@@ -7,16 +7,20 @@ import SearchBox from "./components/SearchBox/SearchBox";
 import { nanoid } from "nanoid/non-secure";
 
 function App() {
-  const [userContact, setUserContact] = useState([
-    { id: "id-1", name: "Rosie Simpson", number: "459-12-56" },
-    { id: "id-2", name: "Hermione Kline", number: "443-89-12" },
-    { id: "id-3", name: "Eden Clements", number: "645-17-79" },
-    { id: "id-4", name: "Annie Copeland", number: "227-91-26" },
-  ])   => {
-    const val = localStorage.getItem("userContact");
-    const parsedVal = JSON.parse(val) ?? 0;
-    return parsedVal;
-  };
+  const [userContact, setUserContact] = useState(
+    () =>
+      JSON.parse(localStorage.getItem("userContact")) ?? [
+        { id: "id-1", name: "Rosie Simpson", number: "459-12-56" },
+        { id: "id-2", name: "Hermione Kline", number: "443-89-12" },
+        { id: "id-3", name: "Eden Clements", number: "645-17-79" },
+        { id: "id-4", name: "Annie Copeland", number: "227-91-26" },
+      ]
+  );
+
+  useEffect(() => {
+    localStorage.setItem("userContact", JSON.stringify(userContact));
+  }, [userContact]);
+
   const userProfileForm = (formData) => {
     const finalUser = {
       ...formData,
